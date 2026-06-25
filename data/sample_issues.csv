@@ -1,0 +1,13 @@
+issue_id,description
+1,Delayed vendor payment due to incomplete approval workflow causing reconciliation backlog.
+2,Manual journal entries were posted without dual control checks leading to accounting discrepancies.
+3,Customer onboarding data mismatch caused failed KYC validation and process delays.
+4,System outage during batch clearing prevented transaction reconciliation for several hours.
+5,Control failure in segregation of duties allowed a single employee to both approve and execute payments.
+6,Reconciliation issue uncovered a missing invoice for high-value cross-border settlement.
+7,Unstructured risk issue report lacked urgency and did not include impact or remediation actions.
+8,Inconsistent authorization levels led to unauthorized access to trade execution systems.
+9,Payment delay due to missing supporting documents in the treasury approval chain.
+10,Exception handling gap in the reconciliation engine resulted in duplicate posting of entries.
+11,Vendor master data error caused payments to be routed to the wrong account.
+12,Incomplete incident report had poor clarity and did not specify affected business units.
