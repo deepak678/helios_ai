@@ -105,3 +105,8 @@ git push origin main
 - Activate the same virtual environment before installing dependencies and running the app.
 - The backend is required for the API-driven version, but the Streamlit UI can fall back to local analysis if needed.
 - Set `OPENAI_API_KEY` to enable the hygiene checker.
+
+
+python -m py_compile app/main.py app/models.py app/routes/analyze.py app/services/embedding.py app/services/clustering.py app/services/duplication.py app/services/hygiene.py app/utils/preprocessing.py ui/app.py
+
+
