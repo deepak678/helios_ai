@@ -6,8 +6,10 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+.env
+.env.local
+.env.*
 *.env
-*.env.*
 .DS_Store
 .ipynb_checkpoints/
 

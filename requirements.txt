@@ -1,11 +1,10 @@
 fastapi
 uvicorn[standard]
-sentence-transformers
-torch
-torchvision
+azure-openai
 scikit-learn
 openai
 pandas
 plotly
 streamlit
 requests
+python-dotenv

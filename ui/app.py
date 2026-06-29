@@ -11,7 +11,13 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from app.routes.analyze import analyze_issues
+try:
+    from app.routes.analyze import analyze_issues
+except ModuleNotFoundError as exc:
+    raise ModuleNotFoundError(
+        "Cannot import app.routes.analyze. Make sure you run Streamlit from the project root "
+        "and that the repository contains the app package with __init__.py files."
+    ) from exc
 
 API_URL = "http://localhost:8000/analyze"
 HEALTH_URL = "http://localhost:8000/health"

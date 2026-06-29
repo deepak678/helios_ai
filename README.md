@@ -59,11 +59,28 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Configure OpenAI API key:
+3. Create configuration file from the example:
 
 ```bash
-export OPENAI_API_KEY="your_openai_api_key"
+cp .env.example .env
 ```
+
+4. Edit `.env` and fill in your Azure OpenAI credentials:
+
+```bash
+# .env
+AZURE_OPENAI_ENDPOINT=https://<your-resource>.openai.azure.com/
+AZURE_OPENAI_API_KEY=<your-api-key>
+AZURE_OPENAI_DEPLOYMENT_NAME=text-embedding-ada-002
+AZURE_OPENAI_API_VERSION=2024-02-01
+
+# Optional: for hygiene checker
+OPENAI_API_KEY=<your-openai-key>
+OPENAI_MODEL=gpt-3.5-turbo
+```
+
+The `.env` file is **not tracked by git** (see `.gitignore`), so your credentials are safe.
+
 
 ## Run Backend
 
@@ -78,6 +95,8 @@ uvicorn app.main:app --reload
 cd /Users/niharikamarya/Documents/project_folders/Helios_use_case/helios_ai
 python -m streamlit run ui/app.py
 ```
+
+> Important: run these commands from the project root directory (`helios_ai`) so Python can resolve the `app` package imports correctly.
 
 ## Git Push Commands
 
@@ -104,4 +123,6 @@ git push origin main
 ## Notes
 - Activate the same virtual environment before installing dependencies and running the app.
 - The backend is required for the API-driven version, but the Streamlit UI can fall back to local analysis if needed.
-- Set `OPENAI_API_KEY` to enable the hygiene checker.
+- **Embeddings:** Uses Azure OpenAI's `text-embedding-ada-002` model. Set `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_API_KEY`.
+- **Hygiene Checker:** Uses OpenAI API. Set `OPENAI_API_KEY` to enable (optional). If not set, returns placeholder scores.
+- The embedding dimension for ada-002 is 1536.

@@ -1,14 +1,17 @@
 import json
 import logging
-import os
 
 import openai
 
+from app.config import OPENAI_API_KEY, OPENAI_MODEL, is_openai_configured
+
 logger = logging.getLogger(__name__)
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-if OPENAI_API_KEY:
+if is_openai_configured():
     openai.api_key = OPENAI_API_KEY
+    logger.info("OpenAI client configured for hygiene checker")
+else:
+    logger.warning("OPENAI_API_KEY not configured; hygiene checker will return default scores.")
 
 
 PROMPT_TEMPLATE = (
@@ -29,14 +32,14 @@ def evaluate_issue_hygiene(issues, max_items=5):
     if not subset:
         return []
 
-    if not OPENAI_API_KEY:
-        logger.warning("OPENAI_API_KEY is not configured; returning default hygiene results.")
+    if not is_openai_configured():
+        logger.warning("OpenAI not configured; returning default hygiene results.")
         return [
             {
                 "issue_id": int(item["issue_id"]),
                 "score": 5.0,
                 "issues": ["OpenAI key missing. Unable to evaluate."],
-                "suggestions": ["Set OPENAI_API_KEY in your environment and retry."],
+                "suggestions": ["Set OPENAI_API_KEY in your .env file and retry."],
             }
             for item in subset
         ]
@@ -48,7 +51,7 @@ def evaluate_issue_hygiene(issues, max_items=5):
 
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model=OPENAI_MODEL,
             messages=[
                 {"role": "system", "content": "You analyze operational risk issue descriptions."},
                 {"role": "user", "content": prompt},
