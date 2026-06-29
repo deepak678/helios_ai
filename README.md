@@ -37,7 +37,7 @@ helios_ai/
 ├── data/
 │   └── sample_issues.csv
 ├── ui/
-│   └── app.py
+│   └── dashboard.py
 ├── requirements.txt
 ├── .gitignore
 └── README.md
@@ -93,7 +93,7 @@ uvicorn app.main:app --reload
 
 ```bash
 cd /Users/niharikamarya/Documents/project_folders/Helios_use_case/helios_ai
-python -m streamlit run ui/app.py
+python -m streamlit run ui/dashboard.py
 ```
 
 > Important: run these commands from the project root directory (`helios_ai`) so Python can resolve the `app` package imports correctly.
