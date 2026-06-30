@@ -12,12 +12,29 @@ def load_issues_from_csv(csv_path=None):
         csv_path = Path(csv_path)
 
     df = pd.read_csv(csv_path)
-    if "issue_id" not in df.columns or "description" not in df.columns:
-        raise ValueError("CSV must contain issue_id and description columns.")
+    required_columns = [
+        "issue_id",
+        "gb_gf",
+        "risk_category",
+        "status",
+        "description",
+        "root_cause",
+    ]
+    missing = [col for col in required_columns if col not in df.columns]
+    if missing:
+        raise ValueError(f"CSV must contain the columns: {', '.join(required_columns)}")
 
     df = df.dropna(subset=["description"]).reset_index(drop=True)
-    issues = [
-        {"issue_id": int(row["issue_id"]), "description": str(row["description"]).strip()}
-        for _, row in df.iterrows()
-    ]
+    issues = []
+    for _, row in df.iterrows():
+        issues.append(
+            {
+                "issue_id": int(row["issue_id"]),
+                "gb_gf": str(row["gb_gf"]).strip() if not pd.isna(row["gb_gf"]) else "",
+                "risk_category": str(row["risk_category"]).strip() if not pd.isna(row["risk_category"]) else "",
+                "status": str(row["status"]).strip() if not pd.isna(row["status"]) else "",
+                "description": str(row["description"]).strip(),
+                "root_cause": str(row["root_cause"]).strip() if not pd.isna(row["root_cause"]) else "",
+            }
+        )
     return issues

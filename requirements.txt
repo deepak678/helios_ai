@@ -1,6 +1,7 @@
 fastapi
 uvicorn[standard]
 azure-openai
+duckdb
 scikit-learn
 openai
 pandas

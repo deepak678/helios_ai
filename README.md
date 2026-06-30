@@ -11,7 +11,8 @@ A prototype operational risk intelligence system for Helios that analyzes non-fi
 This project provides a complete prototype combining a FastAPI backend and a Streamlit frontend. It loads a sample dataset of risk issues, encodes descriptions using `sentence-transformers`, groups similar issues into clusters, finds high-similarity duplicate issue pairs, and generates hygiene feedback via the OpenAI API.
 
 ## Features
-- Thematic clustering using `sentence-transformers` and `KMeans`
+- Local DuckDB-backed vector database for embeddings and similarity search
+- Thematic clustering using Azure OpenAI embeddings and `KMeans`
 - Duplicate detection using cosine similarity on embeddings
 - OpenAI-backed hygiene scoring for clarity, completeness, and risk justification
 - Streamlit dashboard with issue table, cluster distribution, duplicate pairs, and hygiene review

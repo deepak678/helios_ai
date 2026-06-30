@@ -1,13 +1,13 @@
-issue_id,description
-1,Delayed vendor payment due to incomplete approval workflow causing reconciliation backlog.
-2,Manual journal entries were posted without dual control checks leading to accounting discrepancies.
-3,Customer onboarding data mismatch caused failed KYC validation and process delays.
-4,System outage during batch clearing prevented transaction reconciliation for several hours.
-5,Control failure in segregation of duties allowed a single employee to both approve and execute payments.
-6,Reconciliation issue uncovered a missing invoice for high-value cross-border settlement.
-7,Unstructured risk issue report lacked urgency and did not include impact or remediation actions.
-8,Inconsistent authorization levels led to unauthorized access to trade execution systems.
-9,Payment delay due to missing supporting documents in the treasury approval chain.
-10,Exception handling gap in the reconciliation engine resulted in duplicate posting of entries.
-11,Vendor master data error caused payments to be routed to the wrong account.
-12,Incomplete incident report had poor clarity and did not specify affected business units.
+issue_id,gb_gf,risk_category,status,description,root_cause
+1,GF-01,Payment Risk,OPEN,Delayed vendor payment due to incomplete approval workflow causing reconciliation backlog.,Approval workflow gaps prevented payment processing.
+2,GF-02,Control Risk,OPEN,Manual journal entries were posted without dual control checks leading to accounting discrepancies.,Missing segregation of duties in journal entry process.
+3,GF-03,Onboarding Risk,OPEN,Customer onboarding data mismatch caused failed KYC validation and process delays.,Inconsistent customer data across intake forms.
+4,GF-04,System Risk,OPEN,System outage during batch clearing prevented transaction reconciliation for several hours.,Legacy platform failure during high-volume batch processing.
+5,GF-02,Control Risk,OPEN,Control failure in segregation of duties allowed a single employee to both approve and execute payments.,Process design did not enforce dual authorization.
+6,GF-05,Reconciliation Risk,CLOSED,Reconciliation issue uncovered a missing invoice for high-value cross-border settlement.,Data quality gap in invoice ingestion.
+7,GF-06,Reporting Risk,OPEN,Unstructured risk issue report lacked urgency and did not include impact or remediation actions.,Poor reporting template and review discipline.
+8,GF-02,Control Risk,OPEN,Inconsistent authorization levels led to unauthorized access to trade execution systems.,Incorrect role assignment in access management.
+9,GF-01,Payment Risk,OPEN,Payment delay due to missing supporting documents in the treasury approval chain.,Document collection and verification delays.
+10,GF-05,Reconciliation Risk,OPEN,Exception handling gap in the reconciliation engine resulted in duplicate posting of entries.,Inadequate error handling in reconciliation routines.
+11,GF-03,Onboarding Risk,OPEN,Vendor master data error caused payments to be routed to the wrong account.,Incorrect vendor profile configuration.
+12,GF-06,Reporting Risk,CLOSED,Incomplete incident report had poor clarity and did not specify affected business units.,Lack of clear incident reporting standards.
