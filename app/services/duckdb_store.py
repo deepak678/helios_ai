@@ -11,12 +11,12 @@ logger = logging.getLogger(__name__)
 DB_PATH = Path(__file__).resolve().parents[2] / "helios_poc.db"
 
 
-def initialize_duckdb(db_path=None):
-    """Initialize a local DuckDB connection and load vector search extension."""
+def get_duckdb_connection(db_path=None, read_only=False):
+    """Open a DuckDB connection and ensure vector search extension is loaded."""
     if db_path is None:
         db_path = DB_PATH
 
-    conn = duckdb.connect(database=str(db_path), read_only=False)
+    conn = duckdb.connect(database=str(db_path), read_only=read_only)
 
     try:
         conn.execute("INSTALL vss")
@@ -28,8 +28,13 @@ def initialize_duckdb(db_path=None):
     except Exception as exc:
         logger.debug("DuckDB vss load skipped or already loaded: %s", exc)
 
-    create_helios_issues_table(conn)
     return conn
+
+
+def initialize_duckdb(db_path=None):
+    """Initialize a local DuckDB database and create the schema."""
+    with get_duckdb_connection(db_path=db_path, read_only=False) as conn:
+        create_helios_issues_table(conn)
 
 
 def create_helios_issues_table(conn):
@@ -66,7 +71,7 @@ def build_issue_narrative(issue):
     return " | ".join(narrative_parts)
 
 
-def upsert_issues(conn, issues):
+def upsert_issues(issues, db_path=None):
     """Upsert a batch of issues into DuckDB with embeddings."""
     if not issues:
         return
@@ -87,26 +92,27 @@ def upsert_issues(conn, issues):
         for issue, embedding in zip(issues, embeddings)
     ]
 
-    conn.execute("BEGIN TRANSACTION")
-    for row in rows:
-        conn.execute("DELETE FROM helios_issues WHERE issue_id = ?", [row[0]])
-    conn.executemany(
-        "INSERT INTO helios_issues (issue_id, gb_gf, risk_category, status, description, root_cause, issue_embedding) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        rows,
-    )
-    conn.execute("COMMIT")
+    with get_duckdb_connection(db_path=db_path, read_only=False) as conn:
+        conn.execute("BEGIN TRANSACTION")
+        for row in rows:
+            conn.execute("DELETE FROM helios_issues WHERE issue_id = ?", [row[0]])
+        conn.executemany(
+            "INSERT INTO helios_issues (issue_id, gb_gf, risk_category, status, description, root_cause, issue_embedding) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            rows,
+        )
+        conn.execute("COMMIT")
     logger.info("Upserted %s issues into DuckDB", len(rows))
 
 
 def ingest_issues_from_csv(csv_path=None):
     """Load issues from CSV and ingest them into DuckDB."""
-    conn = initialize_duckdb()
+    initialize_duckdb()
     issues = load_issues_from_csv(csv_path)
-    upsert_issues(conn, issues)
-    return conn, issues
+    upsert_issues(issues)
+    return issues
 
 
-def find_similar_issues(conn, new_issue_vector, risk_category, limit=5):
+def find_similar_issues(new_issue_vector, risk_category, limit=5, db_path=None):
     """Find similar open issues filtered by risk category using cosine similarity."""
     if not new_issue_vector:
         return []
@@ -125,7 +131,8 @@ def find_similar_issues(conn, new_issue_vector, risk_category, limit=5):
         ORDER BY similarity DESC
         LIMIT ?
     """
-    result = conn.execute(query, [new_issue_vector, risk_category, limit]).fetchall()
+    with get_duckdb_connection(db_path=db_path, read_only=True) as conn:
+        result = conn.execute(query, [new_issue_vector, risk_category, limit]).fetchall()
     return [
         {
             "issue_id": row[0],
@@ -140,9 +147,10 @@ def find_similar_issues(conn, new_issue_vector, risk_category, limit=5):
     ]
 
 
-def get_all_open_embeddings(conn):
+def get_all_open_embeddings(db_path=None):
     """Return a Pandas DataFrame of all open issue IDs and embeddings."""
-    df = conn.execute(
-        "SELECT issue_id, issue_embedding FROM helios_issues WHERE status = 'OPEN'"
-    ).df()
+    with get_duckdb_connection(db_path=db_path, read_only=True) as conn:
+        df = conn.execute(
+            "SELECT issue_id, issue_embedding FROM helios_issues WHERE status = 'OPEN'"
+        ).df()
     return df

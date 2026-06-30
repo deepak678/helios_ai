@@ -16,7 +16,7 @@ router = APIRouter()
 def analyze_issues():
     """Analyze issues with embeddings, DuckDB ingestion, clustering, duplicate detection, and hygiene scoring."""
     try:
-        conn, issues = ingest_issues_from_csv()
+        issues = ingest_issues_from_csv()
 
         narratives = [
             item["description"] for item in issues
