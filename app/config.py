@@ -19,6 +19,8 @@ AZURE_OPENAI_ENDPOINT = os.environ.get("AZURE_OPENAI_ENDPOINT", "")
 AZURE_OPENAI_API_KEY = os.environ.get("AZURE_OPENAI_API_KEY", "")
 AZURE_OPENAI_DEPLOYMENT_NAME = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME", "text-embedding-ada-002")
 AZURE_OPENAI_API_VERSION = os.environ.get("AZURE_OPENAI_API_VERSION", "2024-02-01")
+# Azure OpenAI Hygiene deployment (for gpt-3.5-turbo or gpt-4)
+AZURE_OPENAI_HYGIENE_DEPLOYMENT_NAME = os.environ.get("AZURE_OPENAI_HYGIENE_DEPLOYMENT_NAME", "gpt-35-turbo")
 
 # OpenAI Configuration (for hygiene checker)
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
